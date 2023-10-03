@@ -1,0 +1,33 @@
+# Kernel 6.5 Patch for Parallels Tools
+# There is NO WARRANTY for this file. Please use at your own risk! 
+
+diff -uprN --no-dereference orig/kmods/prl_fs/SharedFolders/Guest/Linux/prl_fs/file.c changed/kmods/prl_fs/SharedFolders/Guest/Linux/prl_fs/file.c
+--- orig/kmods/prl_fs/SharedFolders/Guest/Linux/prl_fs/file.c	2023-08-15 00:54:28.287665600 +0800
++++ changed/kmods/prl_fs/SharedFolders/Guest/Linux/prl_fs/file.c	2023-10-02 15:16:20.254841187 +0800
+@@ -437,7 +437,9 @@ struct file_operations prlfs_file_fops =
+ 
+ struct file_operations prlfs_dir_fops = {
+ 	.open		= prlfs_open,
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6,5,0)
++	.iterate_shared	= prlfs_readdir,
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0)
+ 	.iterate	= prlfs_readdir,
+ #else
+ 	.readdir	= prlfs_readdir,
+diff -uprN --no-dereference orig/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg_compat.h changed/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg_compat.h
+--- orig/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg_compat.h	2023-08-15 00:54:28.377666000 +0800
++++ changed/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg_compat.h	2023-10-01 23:32:49.090033601 +0800
+@@ -58,7 +58,11 @@
+ #define OPENSUSE_4_4_76
+ #endif
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0) || defined(OPENSUSE_4_4_76)
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 5, 0)
++#define prl_get_user_pages(_1, _2, _3, _4, _5) \
++		get_user_pages(_1, _2, (_3) ? FOLL_WRITE : 0, _4)
++#elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0) || defined(OPENSUSE_4_4_76)
+ #define prl_get_user_pages(_1, _2, _3, _4, _5) \
+ 		get_user_pages(_1, _2, (_3) ? FOLL_WRITE : 0, _4, _5)
+ #elif LINUX_VERSION_CODE >= KERNEL_VERSION(4, 6, 0)
