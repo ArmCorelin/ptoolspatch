@@ -1,6 +1,8 @@
 20231003
 !!There is no warranty for this patch.
 !!Please use it at your own risk
+20231019
+In Ubuntu, need to specify "bash" explicitly at step4.
 
 tested environment: 
 
@@ -8,7 +10,7 @@ tested environment:
 kernel 6.5.5-200.fc38.aarch64 (64-bit)
 Parallels tools 19.0.0.54570
 
-- Ubuntu 23.10(kubuntu)
+- Ubuntu 23.10(ubuntu & kubuntu)
 kernel 6.5.0-9-generic (64-bit)
 
 ---------
@@ -18,7 +20,7 @@ Howto use
  A: If Installer was automatically invoked, 
   1. don't close the window
   2. select CD-ROM menu from Parallels Tool bar 
-  2. select "prl-tools-lin-arm.iso" and mount it.
+  3. select "prl-tools-lin-arm.iso" and mount it.
  B: If your desktop asked you mount or not, mount it.
 
 2.After mounting it, copy all files to your own directory.
@@ -29,7 +31,7 @@ Howto use
  ptools_kernel6.5.patch
 
 4.Run the script
- $ sh autopatch.sh
+ $ bash autopatch.sh  #Need to specify bash explicitly on ubuntu
 
 5.Install Parallels Tools
  $ sudo ./install
